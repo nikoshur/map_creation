@@ -4,7 +4,7 @@ import numpy
 project = QgsProject.instance()             #gets a reference to the project instance
 manager = project.layoutManager()           #gets a reference to the layout manager
 layout = QgsPrintLayout(project)            #makes a new print layout object, takes a QgsProject as argument
-layoutName = "PrintLayout"
+layoutName = "Mapa"
 
 layouts_list = manager.printLayouts()
 for layout in layouts_list:
@@ -100,44 +100,45 @@ palette_range3 = QgsRendererRange(float(second_quintile_max), float(third_quinti
 palette_range4 = QgsRendererRange(float(second_quintile_max), float(fourth_quintile_max), symbol4, f"{fourth_quintile_min} - {fourth_quintile_max}")
 palette_range5 = QgsRendererRange(float(second_quintile_max), float(fifth_quintile_max), symbol5, f"{fifth_quintile_min} - {fifth_quintile_max}")
 
-d_palettes = []
-d_palettes.append(palette_range1)
-d_palettes.append(palette_range2)
-d_palettes.append(palette_range3)
-d_palettes.append(palette_range4)
-d_palettes.append(palette_range5)
+d_palettes = [palette_range1, palette_range2, palette_range3, palette_range4, palette_range5]
 
-attr_list = ['0712', '0122', '0113', '0421', '0621', '0221', '0322', '0411', '0611', '0912', '0932', '0312', '0511', '0731', '0331', '0213', '0522', '0811', '0222', '0931', '0431', '1038', '0632', '1036', '0832', '0212', '1022', '0911', '0921', '0432', 'CGOL', '0722', '0332', '0231', '0721', '0121', '0531', '0541', '0112', '0512', '0732', '0131', '0321', '0412', '0812', '0521', '1032', '0711', '1031', '0211', '1034', '0123', '0822', '0622', '0922', '1011', '1035', '1037', '0311', '0422', '0631', '0111', '1021', '0831', '0232', '0821']
+attr_list = ['0712', '0122', '0113', '0421', '0621', '0221', '0322', '0411', '0611', '0912', '0932', '0312', '0511', '0731',
+             '0331', '0213', '0522', '0811', '0222', '0931', '0431', '1038', '0632', '1036', '0832', '0212', '1022', '0911',
+             '0921', '0432', 'CGOL', '0722', '0332', '0231', '0721', '0121', '0531', '0541', '0112', '0512', '0732', '0131',
+             '0321', '0412', '0812', '0521', '1032', '0711', '1031', '0211', '1034', '0123', '0822', '0622', '0922', '1011',
+             '1035', '1037', '0311', '0422', '0631', '0111', '1021', '0831', '0232', '0821']
 
 for attr in attr_list:
+    
+    nombre_mapa = "Mapa_atributo_" + attr
 
     renderer = QgsGraduatedSymbolRenderer(attrName = attr, ranges = d_palettes)
-
-    #renderer = QgsSingleBandPseudoColorRenderer(layer.dataProvider(), 1, shader)    #renders selected raster layer
     layer.setRenderer(renderer)
     layer.triggerRepaint()
 
     """This adds labels to the map"""
     title = QgsLayoutItemLabel(layout)
-    title.setText("Title Here")
+    title.setText("Infor del atributo: " + attr)
     title.setFont(QFont("Arial", 28))
     title.adjustSizeToText()
     layout.addLayoutItem(title)
     title.attemptMove(QgsLayoutPoint(10, 4, QgsUnitTypes.LayoutMillimeters))
 
     subtitle = QgsLayoutItemLabel(layout)
-    subtitle.setText("Subtitle Here")
+    subtitle.setText("Subtítulo...")
     subtitle.setFont(QFont("Arial", 17))
     subtitle.adjustSizeToText()
     layout.addLayoutItem(subtitle)
     subtitle.attemptMove(QgsLayoutPoint(11, 20, QgsUnitTypes.LayoutMillimeters))   #allows moving text box
-
+    
+    '''
     credit_text = QgsLayoutItemLabel(layout)
     credit_text.setText("Credit Text Here")
     credit_text.setFont(QFont("Arial", 10))
     credit_text.adjustSizeToText()
     layout.addLayoutItem(credit_text)
     credit_text.attemptMove(QgsLayoutPoint(246, 190, QgsUnitTypes.LayoutMillimeters))
+    '''
 
     """This exports a Print Layout as an image"""
     manager = QgsProject.instance().layoutManager()     #this is a reference to the layout Manager, which contains a list of print layouts
@@ -145,10 +146,5 @@ for attr in attr_list:
     layout = manager.layoutByName(layoutName)         #this accesses a specific layout, by name (which is a string)
 
     exporter = QgsLayoutExporter(layout)                #this creates a QgsLayoutExporter object
-    #exporter.exportToPdf('C:/asd/TestLayout' + 'attr' + '.pdf', QgsLayoutExporter.PdfExportSettings())      #this exports a pdf of the layout object
-    exporter.exportToImage('C:/asd/TestLayout' + attr + '.png', QgsLayoutExporter.ImageExportSettings())      #this exports a pdf of the layout object
-
-
-
-
-
+    #exporter.exportToPdf('C:/asd/' + nombre_mapa + '.pdf', QgsLayoutExporter.PdfExportSettings())      #this exports a pdf of the layout object
+    exporter.exportToImage('C:/asd/' + nombre_mapa '.png', QgsLayoutExporter.ImageExportSettings())      #this exports a png of the layout object
