@@ -1,11 +1,4 @@
-import numpy            #using percentile function when calculating raster pixel value range
-#add import statements for qgis.core class functions, etc###
-
-
-#add function to clip output raster from step 2 to vector input used in step 1 (vector of the study area)
-"""This clips output raster from step 2 to extent of vector input of study area"""
-###Uses Clip Raster by mask layer tool from Raster>Extraction>...
-
+import numpy            
 
 """This creates a new print layout"""
 project = QgsProject.instance()             #gets a reference to the project instance
@@ -148,16 +141,12 @@ for attr in attr_list:
 
     """This exports a Print Layout as an image"""
     manager = QgsProject.instance().layoutManager()     #this is a reference to the layout Manager, which contains a list of print layouts
-    #for layout in manager.printLayouts():               #this prints all existing print layouts in a list
-    #    print(layout.name())
 
     layout = manager.layoutByName(layoutName)         #this accesses a specific layout, by name (which is a string)
 
     exporter = QgsLayoutExporter(layout)                #this creates a QgsLayoutExporter object
     #exporter.exportToPdf('C:/asd/TestLayout' + 'attr' + '.pdf', QgsLayoutExporter.PdfExportSettings())      #this exports a pdf of the layout object
     exporter.exportToImage('C:/asd/TestLayout' + attr + '.png', QgsLayoutExporter.ImageExportSettings())      #this exports a pdf of the layout object
-    #exporter.exportToImage('/Users/ep9k/Desktop/TestLayout.png', QgsLayoutExporter.ImageExportSettings())  #this exports an image of the layout object
-
 
 
 
